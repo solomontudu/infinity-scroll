@@ -1,15 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap");
 
 html {
   box-sizing: border-box;
-
 }
 
 body {
   margin: 0;
   min-height: 100vh;
   font-family: "Playfair Display", serif;
-  background:whitesmoke;
+  background: whitesmoke;
 }
 
 h1 {
@@ -27,14 +26,33 @@ h1 {
   position: fixed;
   top: 0;
   bottom: 0;
-  background: rgba(255,255,255,.8);
-
+  background: rgba(255, 255, 255, 0.8);
 }
-
 
 .loader img {
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
+}
+
+/* image container */
+.image-container {
+  margin: 10px 30%;
+}
+
+.image-container img {
+  width: 100%;
+  margin-top: 5px;
+}
+
+/* media query: large smartphone */
+@media screen and (max-width: 600px) {
+  h1 {
+    font-size: 20px;
+  }
+
+  .image-container {
+    margin: 10px;
+  }
 }
