@@ -1,11 +1,9 @@
 // unsplash API
-let count = 3;
+let count = 20;
 
 const apiKey = "odGcFeIH6ax_sitR_DXksy-7FhtYjwNV1F23qF_BvJk";
-const secretKey = "OdXdLqJ-Txn_3tgp_fdWUmTS_bj9PR5-bh_e26oLQZ8";
 let aipUrl = `https://api.unsplash.com/photos/random/?client_id=${apiKey}&count=${count}`;
 
-const firstImage = document.getElementById("fistImage");
 const imageContainer = document.getElementById("image-container");
 const loader = document.getElementById("loader");
 
@@ -13,18 +11,14 @@ let ready = false;
 let imagesLoaded = 0;
 let totalImages = 0;
 let photosArray = [];
-let failedCount = 0;
 
 // check if all images were loaded
 function imageLoaded() {
-  console.log("loadeded");
   imagesLoaded++;
 
   if (imagesLoaded === totalImages) {
     ready = true;
     loader.hidden = true;
-    count = 30;
-    aipUrl = `https://api.unsplash.com/photos/random/?client_id=${apiKey}&count=${count}`;
   }
 }
 
@@ -76,13 +70,13 @@ async function getPhotos() {
 
     displayPhotos();
   } catch (error) {
-    // catch error
     // hidding the loader animation
     loader.children[0].hidden = true;
 
     // replacing the loader and appending the error message to the ui
     const errMsg = document.createElement("p");
     errMsg.textContent = "Request Rate Limit Exceeded";
+    // errMsg.textContent = error.message;
     loader.classList.add("center-elements");
     loader.appendChild(errMsg);
   }
@@ -90,15 +84,13 @@ async function getPhotos() {
 
 // check to see if scrolling near bottom of page, load more photos
 window.addEventListener("scroll", () => {
+  console.log(document.body.offsetHeight);
   if (
-    window.scrollY + window.innerHeight >=
-      document.documentElement.scrollHeight - 300 &&
+    window.scrollY + window.innerHeight >= document.body.offsetHeight - 100 &&
     ready
   ) {
-    const bringPhotos = setTimeout(() => {
-      clearTimeout(bringPhotos);
-      getPhotos();
-    }, 1000);
+    ready = false;
+    getPhotos();
   }
 });
 
