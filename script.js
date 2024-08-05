@@ -13,15 +13,17 @@ let ready = false;
 let imagesLoaded = 0;
 let totalImages = 0;
 let photosArray = [];
+let failedCount = 0;
 
 // check if all images were loaded
 function imageLoaded() {
-  imageLoaded++;
+  console.log("loadeded");
+  imagesLoaded++;
+
   if (imageLoaded === totalImages) {
     ready = true;
-    loader.hidden = ture;
+    loader.hidden = true;
     count = 30;
-    aipUrl = `https://api.unsplash.com/photos/random/?client_id=${apiKey}&count=${count}`;
   }
 }
 
@@ -56,15 +58,15 @@ function displayPhotos() {
     // event listener, check when each is finished loading
     img.addEventListener("load", imageLoaded);
 
-    // put <img> inside <a>, then put both inside imageContainer element TODO: remove the console log
+    // put <img> inside <a>, then put both inside imageContainer element
     item.appendChild(img);
 
     imageContainer.appendChild(item);
+    loader.hidden = true;
   });
-
-  loader.hidden = true;
 }
 
+// TODO: fix the scroll behavior of this page especially the ready flag and remove the console log
 // get photos from unsplash api
 async function getPhotos() {
   try {
@@ -74,18 +76,34 @@ async function getPhotos() {
     displayPhotos();
   } catch (error) {
     // catch error
-    if (error.message.toLowerCase().includes("Limit exceeded".toLowerCase()))
-      console.log("Request Rate Limit Exceeded");
+    failedCount++;
+    // retrying for five times in case of first failure to fetch the data after every 2 seconds
+    if (failedCount < 5) {
+      setTimeout(getPhotos, 2000);
+    }
+
+    // hiding the loader animation and showing the error message
+    if (failedCount >= 5) {
+      // hidding the loader animation
+      loader.children[0].hidden = true;
+      // appending the error message to the ui
+      const errMsg = document.createElement("p");
+      errMsg.textContent = "Request Rate Limit Exceeded";
+      loader.classList.add("center-elements");
+      loader.appendChild(errMsg);
+    }
   }
 }
 
 // check to see if scrolling near bottom of page, load more photos
 window.addEventListener("scroll", () => {
-  if (
-    window.innerHeight + window.scrollY >= document.body.offsetHeight - 1000 &&
-    ready
-  ) {
-    ready = false;
+  const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+  const scrolled = window.scrollY;
+
+  console.log(scrollable, scrolled, ready);
+
+  if (scrolled >= scrollable - 200 && ready) {
+    console.log("inside scroll");
     getPhotos();
   }
 });

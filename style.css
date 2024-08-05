@@ -56,3 +56,9 @@ h1 {
     margin: 10px;
   }
 }
+
+.center-elements {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
