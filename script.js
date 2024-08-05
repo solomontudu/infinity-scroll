@@ -3,7 +3,7 @@ let count = 3;
 
 const apiKey = "odGcFeIH6ax_sitR_DXksy-7FhtYjwNV1F23qF_BvJk";
 const secretKey = "OdXdLqJ-Txn_3tgp_fdWUmTS_bj9PR5-bh_e26oLQZ8";
-const aipUrl = `https://api.unsplash.com/photos/random/?client_id=${apiKey}&count=${count}`;
+let aipUrl = `https://api.unsplash.com/photos/random/?client_id=${apiKey}&count=${count}`;
 
 const firstImage = document.getElementById("fistImage");
 const imageContainer = document.getElementById("image-container");
@@ -77,34 +77,28 @@ async function getPhotos() {
     displayPhotos();
   } catch (error) {
     // catch error
-    failedCount++;
-    // retrying for five times in case of first failure to fetch the data after every 2 seconds
-    if (failedCount < 5) {
-      setTimeout(getPhotos, 2000);
-    }
+    // hidding the loader animation
+    loader.children[0].hidden = true;
 
-    // hiding the loader animation and showing the error message
-    if (failedCount >= 5) {
-      // hidding the loader animation
-      loader.children[0].hidden = true;
-      // appending the error message to the ui
-      const errMsg = document.createElement("p");
-      errMsg.textContent = "Request Rate Limit Exceeded";
-      loader.classList.add("center-elements");
-      loader.appendChild(errMsg);
-    }
+    // replacing the loader and appending the error message to the ui
+    const errMsg = document.createElement("p");
+    errMsg.textContent = "Request Rate Limit Exceeded";
+    loader.classList.add("center-elements");
+    loader.appendChild(errMsg);
   }
 }
 
 // check to see if scrolling near bottom of page, load more photos
 window.addEventListener("scroll", () => {
-  const scrollable = document.documentElement.scrollHeight;
-
-  const scrolled = window.scrollY;
-
-  if (scrollable - 200 == scrolled + window.innerHeight && ready) {
-    console.log("inside scroll");
-    getPhotos();
+  if (
+    window.scrollY + window.innerHeight >=
+      document.documentElement.scrollHeight - 300 &&
+    ready
+  ) {
+    const bringPhotos = setTimeout(() => {
+      clearTimeout(bringPhotos);
+      getPhotos();
+    }, 1000);
   }
 });
 
