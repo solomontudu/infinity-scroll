@@ -62,11 +62,11 @@ function displayPhotos() {
     item.appendChild(img);
 
     imageContainer.appendChild(item);
-    loader.hidden = true;
   });
+
+  loader.hidden = true;
 }
 
-// TODO: fix the scroll behavior of this page especially the ready flag and remove the console log
 // get photos from unsplash api
 async function getPhotos() {
   try {
