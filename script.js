@@ -1,5 +1,5 @@
 // unsplash API
-const count = 3;
+let count = 3;
 
 const apiKey = "odGcFeIH6ax_sitR_DXksy-7FhtYjwNV1F23qF_BvJk";
 const secretKey = "OdXdLqJ-Txn_3tgp_fdWUmTS_bj9PR5-bh_e26oLQZ8";
@@ -20,10 +20,11 @@ function imageLoaded() {
   console.log("loadeded");
   imagesLoaded++;
 
-  if (imageLoaded === totalImages) {
+  if (imagesLoaded === totalImages) {
     ready = true;
     loader.hidden = true;
     count = 30;
+    aipUrl = `https://api.unsplash.com/photos/random/?client_id=${apiKey}&count=${count}`;
   }
 }
 
@@ -97,12 +98,11 @@ async function getPhotos() {
 
 // check to see if scrolling near bottom of page, load more photos
 window.addEventListener("scroll", () => {
-  const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+  const scrollable = document.documentElement.scrollHeight;
+
   const scrolled = window.scrollY;
 
-  console.log(scrollable, scrolled, ready);
-
-  if (scrolled >= scrollable - 200 && ready) {
+  if (scrollable - 200 == scrolled + window.innerHeight && ready) {
     console.log("inside scroll");
     getPhotos();
   }
